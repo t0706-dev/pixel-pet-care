@@ -1,0 +1,564 @@
+/* ============================================================
+   style.css - ピクたま スタイルシート
+   レトロ・ドット絵風 たまごっちデバイス風デザイン
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* ---- CSS 変数 ---- */
+:root {
+  --font-pixel: 'Press Start 2P', 'Courier New', monospace;
+
+  /* デバイス外装カラー */
+  --device-bg:     #d946ef;
+  --device-shadow: #701a75;
+  --device-dark:   #a21caf;
+
+  /* LCD スクリーン */
+  --screen-bg:   #1a2e1a;
+  --screen-text: #86efac;
+  --screen-dim:  #4ade80;
+
+  /* ステータスバー */
+  --bar-orange: #fb923c;
+  --bar-pink:   #f472b6;
+  --bar-blue:   #60a5fa;
+
+  /* ページ背景 */
+  --page-bg: linear-gradient(135deg, #fdf4ff 0%, #ede9fe 100%);
+}
+
+/* ---- ベースリセット ---- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-pixel);
+  background: var(--page-bg);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 12px 8px;
+  overflow-x: hidden;
+}
+
+/* ---- 画面管理 ---- */
+.screen {
+  width: 100%;
+  max-width: 400px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ============================================================
+   タイトル画面
+   ============================================================ */
+#screen-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 90vh;
+  justify-content: center;
+}
+
+.title-wrap {
+  text-align: center;
+  width: 100%;
+  padding: 24px 16px;
+}
+
+.title-logo {
+  font-size: clamp(20px, 6vw, 28px);
+  color: #7c3aed;
+  text-shadow: 3px 3px 0 #4c1d95;
+  letter-spacing: 6px;
+  margin-bottom: 8px;
+}
+
+.title-egg {
+  font-size: 96px;
+  line-height: 1;
+  display: block;
+  margin: 20px auto;
+  animation: bounce 1.2s ease-in-out infinite;
+}
+
+.title-sub {
+  font-size: 8px;
+  color: #7c3aed;
+  opacity: 0.7;
+  margin-bottom: 32px;
+  letter-spacing: 1px;
+}
+
+.title-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+/* ============================================================
+   共通ボタン
+   ============================================================ */
+.btn-main {
+  font-family: var(--font-pixel);
+  font-size: 13px;
+  padding: 14px 0;
+  width: 210px;
+  background: #7c3aed;
+  color: #fff;
+  border: none;
+  border-bottom: 5px solid #4c1d95;
+  border-right:  4px solid #4c1d95;
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition: transform 0.08s, border-width 0.08s;
+  image-rendering: pixelated;
+}
+
+.btn-main:active {
+  transform: translate(2px, 3px);
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+}
+
+.btn-main.btn-blue {
+  background: #2563eb;
+  border-bottom-color: #1e3a8a;
+  border-right-color:  #1e3a8a;
+}
+
+.btn-main:disabled {
+  background: #9ca3af;
+  border-color: #6b7280;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-sub {
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  padding: 8px 18px;
+  background: transparent;
+  color: #9ca3af;
+  border: 2px solid #9ca3af;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.btn-sub:hover {
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+/* ============================================================
+   メイン画面 - ゲームデバイスフレーム
+   ============================================================ */
+#screen-main {
+  display: flex;
+  justify-content: center;
+}
+
+#screen-main.hidden {
+  display: none;
+}
+
+/* たまごっち風デバイス外装 */
+.game-frame {
+  width: 100%;
+  max-width: 400px;
+  background: var(--device-bg);
+  border-radius: 28px 28px 60px 60px;
+  padding: 10px 10px 18px;
+  box-shadow:
+    0 6px 0 var(--device-shadow),
+    0 10px 30px rgba(109, 40, 130, 0.45);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* ---- ヘッダー ---- */
+.game-header {
+  background: var(--screen-bg);
+  border: 2px solid #0a1a0a;
+  border-radius: 6px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--screen-text);
+  font-size: 8px;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+}
+
+/* ---- キャラクターエリア（LCD） ---- */
+.char-area {
+  background: var(--screen-bg);
+  border: 2px solid #0a1a0a;
+  border-radius: 6px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* LCD ドット感を演出するグリッドオーバーレイ */
+.char-area::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg,   transparent, transparent 3px, rgba(0,20,0,0.15) 3px, rgba(0,20,0,0.15) 4px),
+    repeating-linear-gradient(90deg,  transparent, transparent 3px, rgba(0,20,0,0.15) 3px, rgba(0,20,0,0.15) 4px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.char-sprite {
+  font-size: 72px;
+  line-height: 1;
+  display: block;
+  z-index: 2;
+  position: relative;
+  user-select: none;
+}
+
+.poop-display {
+  position: absolute;
+  bottom: 6px;
+  right: 8px;
+  font-size: 16px;
+  letter-spacing: -6px;
+  z-index: 2;
+}
+
+/* ---- キャラアニメーション ---- */
+.char-normal {
+  animation: bounce 1.4s ease-in-out infinite;
+}
+
+.char-happy {
+  animation: bounce-happy 0.6s ease-in-out infinite;
+}
+
+.char-sad {
+  animation: wobble 2.2s ease-in-out infinite;
+}
+
+.char-sick {
+  animation: shake 0.5s linear infinite;
+  filter: saturate(0.4) sepia(0.6);
+}
+
+.char-sleeping {
+  animation: breathe 3s ease-in-out infinite;
+  opacity: 0.75;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+
+@keyframes bounce-happy {
+  0%, 100% { transform: translateY(0)   rotate(-6deg); }
+  50%       { transform: translateY(-14px) rotate(6deg); }
+}
+
+@keyframes wobble {
+  0%, 100% { transform: rotate(0deg)   translateY(0); }
+  30%       { transform: rotate(-6deg) translateY(4px); }
+  70%       { transform: rotate(6deg)  translateY(4px); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25%       { transform: translateX(-5px); }
+  75%       { transform: translateX(5px); }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(0.92); }
+}
+
+/* ---- メッセージボックス ---- */
+.message-box {
+  background: var(--screen-bg);
+  border: 2px solid #0a1a0a;
+  border-radius: 6px;
+  padding: 8px 12px;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+}
+
+#msg-text {
+  color: var(--screen-text);
+  font-size: 8px;
+  line-height: 1.8;
+  word-break: break-all;
+}
+
+.msg-flash {
+  animation: flash 0.4s ease-out;
+}
+
+@keyframes flash {
+  0%   { opacity: 0.2; }
+  100% { opacity: 1; }
+}
+
+/* ---- ステータスパネル ---- */
+.status-panel {
+  background: var(--screen-bg);
+  border: 2px solid #0a1a0a;
+  border-radius: 6px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.stat-icon {
+  font-size: 11px;
+  width: 16px;
+  flex-shrink: 0;
+}
+
+.stat-name {
+  font-size: 7px;
+  color: var(--screen-dim);
+  width: 46px;
+  flex-shrink: 0;
+}
+
+.bar-bg {
+  flex: 1;
+  height: 9px;
+  background: #0d230d;
+  border: 1px solid #1a3a1a;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  transition: width 0.5s ease, filter 0.5s ease;
+  border-radius: 1px;
+}
+
+.bar-orange { background: var(--bar-orange); }
+.bar-pink   { background: var(--bar-pink);   }
+.bar-blue   { background: var(--bar-blue);   }
+
+/* 低ステータス時に色が変わる（JSで filter 制御） */
+.bar.danger { filter: hue-rotate(200deg) saturate(2); }
+.bar.warn   { filter: hue-rotate(40deg); }
+
+.stat-num {
+  font-size: 7px;
+  color: var(--screen-text);
+  width: 26px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ---- 状態アイコン行 ---- */
+.icon-row {
+  background: var(--screen-bg);
+  border: 2px solid #0a1a0a;
+  border-radius: 6px;
+  padding: 4px 8px;
+  min-height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 8px;
+  color: #fbbf24;
+}
+
+/* ---- 操作ボタングリッド ---- */
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.btn-action {
+  font-family: var(--font-pixel);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 10px 4px;
+  background: #fdf4ff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.08s, box-shadow 0.08s;
+  box-shadow: 0 4px 0 #a21caf;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-action:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #a21caf;
+}
+
+.btn-emoji {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.btn-label {
+  font-size: 7px;
+  color: #374151;
+  font-family: var(--font-pixel);
+  white-space: nowrap;
+}
+
+/* 各ボタンに個別カラー */
+.action-grid .btn-action:nth-child(1) { box-shadow: 0 4px 0 #c2410c; }
+.action-grid .btn-action:nth-child(2) { box-shadow: 0 4px 0 #be185d; }
+.action-grid .btn-action:nth-child(3) { box-shadow: 0 4px 0 #065f46; }
+.action-grid .btn-action:nth-child(4) { box-shadow: 0 4px 0 #1d4ed8; }
+.action-grid .btn-action:nth-child(5) { box-shadow: 0 4px 0 #991b1b; }
+.action-grid .btn-action:nth-child(6) { box-shadow: 0 4px 0 #5b21b6; }
+
+.action-grid .btn-action:nth-child(1):active { box-shadow: 0 1px 0 #c2410c; }
+.action-grid .btn-action:nth-child(2):active { box-shadow: 0 1px 0 #be185d; }
+.action-grid .btn-action:nth-child(3):active { box-shadow: 0 1px 0 #065f46; }
+.action-grid .btn-action:nth-child(4):active { box-shadow: 0 1px 0 #1d4ed8; }
+.action-grid .btn-action:nth-child(5):active { box-shadow: 0 1px 0 #991b1b; }
+.action-grid .btn-action:nth-child(6):active { box-shadow: 0 1px 0 #5b21b6; }
+
+/* ============================================================
+   モーダル
+   ============================================================ */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 16px;
+}
+
+.modal.hidden {
+  display: none !important;
+}
+
+.modal-box {
+  background: var(--screen-bg);
+  border: 4px solid var(--screen-dim);
+  border-radius: 8px;
+  padding: 24px 20px;
+  text-align: center;
+  max-width: 320px;
+  width: 100%;
+  animation: pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes pop-in {
+  from { transform: scale(0.4); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.modal-title {
+  font-size: 12px;
+  color: var(--screen-text);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.modal-message {
+  font-size: 9px;
+  color: #d1fae5;
+  margin-bottom: 20px;
+  line-height: 2;
+}
+
+.evo-sprite {
+  font-size: 80px;
+  display: block;
+  margin: 0 auto 16px;
+  animation: bounce-happy 0.6s ease-in-out infinite;
+}
+
+/* 結果モーダル */
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #1a4a2a;
+  font-size: 7px;
+  color: var(--screen-text);
+  gap: 8px;
+}
+
+.result-item span:last-child {
+  text-align: right;
+  color: #fbbf24;
+  flex-shrink: 0;
+}
+
+.result-char {
+  font-size: 64px;
+  display: block;
+  text-align: center;
+  margin: 16px 0 8px;
+}
+
+/* ============================================================
+   レスポンシブ調整
+   ============================================================ */
+@media (max-width: 380px) {
+  .char-sprite { font-size: 60px; }
+  .char-area   { height: 130px; }
+  .btn-emoji   { font-size: 22px; }
+  .btn-label   { font-size: 6px; }
+  .title-logo  { font-size: 18px; }
+  .title-egg   { font-size: 72px; }
+}
+
+@media (max-height: 680px) {
+  .char-area { height: 120px; }
+  .char-sprite { font-size: 56px; }
+  .title-egg { font-size: 64px; margin: 12px auto; }
+}

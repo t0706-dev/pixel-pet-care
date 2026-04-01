@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ピクたま</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ========== タイトル画面 ========== -->
+  <div id="screen-title" class="screen">
+    <div class="title-wrap">
+      <h1 class="title-logo">ピクたま</h1>
+      <div class="title-egg">🥚</div>
+      <p class="title-sub">たまごっち風 いくせいゲーム</p>
+      <div class="title-buttons">
+        <button id="btn-new"   class="btn-main">はじめる</button>
+        <button id="btn-load"  class="btn-main btn-blue">つづきから</button>
+        <button id="btn-reset" class="btn-sub">リセット</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== メイン画面 ========== -->
+  <div id="screen-main" class="screen hidden">
+    <div class="game-frame">
+
+      <!-- ヘッダー（成長段階・年齢・記録ボタン） -->
+      <div class="game-header">
+        <span id="hdr-stage">たまご</span>
+        <span id="hdr-age">0日0時間</span>
+        <button class="btn-icon" onclick="showResult()" title="そだてきろく">📋</button>
+      </div>
+
+      <!-- キャラクター表示エリア（LCD風） -->
+      <div class="char-area">
+        <div id="char-sprite" class="char-sprite char-normal">🥚</div>
+        <div id="poop-display" class="poop-display"></div>
+      </div>
+
+      <!-- メッセージ表示 -->
+      <div class="message-box">
+        <p id="msg-text">ようこそ！</p>
+      </div>
+
+      <!-- ステータスバー -->
+      <div class="status-panel">
+        <div class="stat-row">
+          <span class="stat-icon">🍙</span>
+          <span class="stat-name">まんぷく</span>
+          <div class="bar-bg"><div id="bar-hunger" class="bar bar-orange"></div></div>
+          <span id="num-hunger" class="stat-num">100</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-icon">😊</span>
+          <span class="stat-name">きげん</span>
+          <div class="bar-bg"><div id="bar-mood" class="bar bar-pink"></div></div>
+          <span id="num-mood" class="stat-num">100</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-icon">✨</span>
+          <span class="stat-name">せいけつ</span>
+          <div class="bar-bg"><div id="bar-clean" class="bar bar-blue"></div></div>
+          <span id="num-clean" class="stat-num">100</span>
+        </div>
+      </div>
+
+      <!-- 状態アイコン行（病気・睡眠・うんち） -->
+      <div class="icon-row">
+        <span id="icon-sick"></span>
+        <span id="icon-sleep"></span>
+        <span id="icon-poop-count"></span>
+      </div>
+
+      <!-- 操作ボタン（6種類） -->
+      <div class="action-grid">
+        <button class="btn-action" onclick="doAction('feed')">
+          <span class="btn-emoji">🍙</span><span class="btn-label">ごはん</span>
+        </button>
+        <button class="btn-action" onclick="doAction('snack')">
+          <span class="btn-emoji">🍬</span><span class="btn-label">おやつ</span>
+        </button>
+        <button class="btn-action" onclick="doAction('play')">
+          <span class="btn-emoji">🎮</span><span class="btn-label">あそぶ</span>
+        </button>
+        <button class="btn-action" onclick="doAction('clean')">
+          <span class="btn-emoji">🚿</span><span class="btn-label">そうじ</span>
+        </button>
+        <button class="btn-action" onclick="doAction('heal')">
+          <span class="btn-emoji">💊</span><span class="btn-label">なおす</span>
+        </button>
+        <button class="btn-action" id="btn-sleep-wake" onclick="doAction('sleep')">
+          <span class="btn-emoji">🌙</span><span class="btn-label">ねる</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========== 成長モーダル ========== -->
+  <div id="modal-evo" class="modal hidden">
+    <div class="modal-box">
+      <div id="evo-sprite" class="evo-sprite"></div>
+      <h2 id="evo-title" class="modal-title">せいちょう！</h2>
+      <p id="evo-message" class="modal-message"></p>
+      <button class="btn-main" onclick="closeModal('modal-evo')">やったー！</button>
+    </div>
+  </div>
+
+  <!-- ========== 記録モーダル ========== -->
+  <div id="modal-result" class="modal hidden">
+    <div class="modal-box">
+      <h2 class="modal-title">そだてきろく</h2>
+      <div id="result-body"></div>
+      <button class="btn-main" onclick="closeModal('modal-result')">とじる</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
