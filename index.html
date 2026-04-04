@@ -31,7 +31,7 @@
       <!-- ブランドラベル（デバイス上部） -->
       <div class="brand-label">ピクたま</div>
 
-      <!-- ★ 上部ボタン行：ごはん・おやつ・あそぶ・そうじ -->
+      <!-- ★ 上部ボタン行：ごはん・おやつ・あそぶ -->
       <div class="btn-row top-row">
         <button class="btn-action" onclick="doAction('feed')">
           <span class="btn-emoji">🍙</span><span class="btn-label">ごはん</span>
@@ -41,9 +41,6 @@
         </button>
         <button class="btn-action" onclick="doAction('play')">
           <span class="btn-emoji">🎮</span><span class="btn-label">あそぶ</span>
-        </button>
-        <button class="btn-action" onclick="doAction('clean')">
-          <span class="btn-emoji">🚿</span><span class="btn-label">そうじ</span>
         </button>
       </div>
 
@@ -98,13 +95,16 @@
 
       </div><!-- /lcd-screen -->
 
-      <!-- ★ 下部ボタン行：なおす・ねる・じょうたい -->
+      <!-- ★ 下部ボタン行：なおす・ねる・そうじ・じょうたい -->
       <div class="btn-row bottom-row">
         <button class="btn-action" onclick="doAction('heal')">
           <span class="btn-emoji">💊</span><span class="btn-label">なおす</span>
         </button>
         <button class="btn-action" id="btn-sleep-wake" onclick="doAction('sleep')">
           <span class="btn-emoji">🌙</span><span class="btn-label">ねる</span>
+        </button>
+        <button class="btn-action" onclick="doAction('clean')">
+          <span class="btn-emoji">🚿</span><span class="btn-label">そうじ</span>
         </button>
         <button class="btn-action btn-status-toggle" id="btn-toggle-status" onclick="toggleStatusView()">
           <span class="btn-emoji">📋</span><span class="btn-label">じょうたい</span>
