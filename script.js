@@ -491,6 +491,7 @@ function doAction(type) {
       state.hunger = clamp(state.hunger + 20, 0, 100);
       state.careCount++;
       showMessage('🍙 もぐもぐ…おいしい！');
+      triggerActionEffect('feed');
       break;
 
     case 'snack':
@@ -504,6 +505,7 @@ function doAction(type) {
         showMessage('🍬 やったー！おやつだ！うれしい！');
       }
       state.careCount++;
+      triggerActionEffect('snack');
       break;
 
     case 'play':
@@ -512,6 +514,7 @@ function doAction(type) {
       state.hunger = clamp(state.hunger -  5, 0, 100);
       state.careCount++;
       showMessage('🎮 わーい！たのしいね！');
+      triggerActionEffect('play');
       break;
 
     case 'clean':
@@ -524,6 +527,7 @@ function doAction(type) {
         showMessage('🚿 ぴかぴかになったよ！');
       }
       state.careCount++;
+      triggerActionEffect('clean');
       break;
 
     case 'heal':
@@ -532,6 +536,7 @@ function doAction(type) {
       state.lowStatMinutes = 0;
       state.careCount++;
       showMessage('💊 元気になったよ！ありがとう！');
+      triggerActionEffect('heal');
       break;
 
     case 'sleep':
@@ -539,11 +544,16 @@ function doAction(type) {
         state.sleep = 'sleeping';
         showMessage('🌙 おやすみ…zzz');
         setSleepButtonText('sleeping');
+        triggerActionEffect('sleep');
       } else {
         state.sleep = 'awake';
         state.mood  = clamp(state.mood + 10, 0, 100);
         showMessage('☀️ おはよう！よく眠れたよ！');
         setSleepButtonText('awake');
+        // 目覚めアニメーション（sleepとは別クラス）
+        const cv = document.getElementById('char-canvas');
+        cv.classList.add('char-action-wake');
+        cv.addEventListener('animationend', () => cv.classList.remove('char-action-wake'), { once: true });
       }
       state.careCount++;
       break;
@@ -551,6 +561,52 @@ function doAction(type) {
 
   updateDisplay();
   saveGame();
+}
+
+/**
+ * お世話アクション時のキャラアニメーション＋フローティングエフェクト
+ * @param {string} type - アクション種別
+ */
+function triggerActionEffect(type) {
+  const canvas   = document.getElementById('char-canvas');
+  const charArea = document.getElementById('char-area');
+
+  // アクションごとのアニメーションクラスと浮かぶアイコン
+  const config = {
+    feed:  { cls: 'char-action-eat',   icons: ['🍙', '✨', '🍙'] },
+    snack: { cls: 'char-action-eat',   icons: ['🍬', '💖', '🍬'] },
+    play:  { cls: 'char-action-play',  icons: ['⭐', '🎵', '✨', '⭐'] },
+    clean: { cls: 'char-action-clean', icons: ['💧', '✨', '💧', '✨'] },
+    heal:  { cls: 'char-action-heal',  icons: ['💊', '✨', '💖'] },
+  };
+
+  const { cls, icons } = config[type] || {};
+
+  // キャラアニメーション（既存ループを一時上書き、終了後に戻す）
+  if (cls) {
+    canvas.classList.add(cls);
+    const onEnd = () => {
+      canvas.classList.remove(cls);
+      canvas.removeEventListener('animationend', onEnd);
+    };
+    canvas.addEventListener('animationend', onEnd);
+  }
+
+  // フローティングアイコンを順番に生成
+  if (icons && charArea) {
+    icons.forEach((icon, i) => {
+      setTimeout(() => {
+        const el = document.createElement('span');
+        el.className = 'float-effect';
+        el.textContent = icon;
+        // 左右をランダムに散らす
+        el.style.left = (20 + Math.random() * 60) + '%';
+        charArea.appendChild(el);
+        // アニメーション終了後に除去
+        setTimeout(() => el.remove(), 1200);
+      }, i * 160);
+    });
+  }
 }
 
 function setSleepButtonText(sleepState) {
