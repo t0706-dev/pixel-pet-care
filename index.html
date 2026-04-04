@@ -6,7 +6,7 @@
   <title>ピクたま</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -28,56 +28,11 @@
   <div id="screen-main" class="screen hidden">
     <div class="game-frame">
 
-      <!-- ヘッダー（成長段階・年齢・記録ボタン） -->
-      <div class="game-header">
-        <span id="hdr-stage">たまご</span>
-        <span id="hdr-age">0日0時間</span>
-        <button class="btn-icon" onclick="showResult()" title="そだてきろく">📋</button>
-      </div>
+      <!-- ブランドラベル（デバイス上部） -->
+      <div class="brand-label">ピクたま</div>
 
-      <!-- キャラクター表示エリア（LCD風） -->
-      <div class="char-area">
-        <canvas id="char-canvas" class="char-canvas char-normal"></canvas>
-        <div id="zzz-overlay" class="zzz-overlay" style="display:none"></div>
-        <div id="poop-display" class="poop-display"></div>
-      </div>
-
-      <!-- メッセージ表示 -->
-      <div class="message-box">
-        <p id="msg-text">ようこそ！</p>
-      </div>
-
-      <!-- ステータスバー -->
-      <div class="status-panel">
-        <div class="stat-row">
-          <span class="stat-icon">🍙</span>
-          <span class="stat-name">まんぷく</span>
-          <div class="bar-bg"><div id="bar-hunger" class="bar bar-orange"></div></div>
-          <span id="num-hunger" class="stat-num">100</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-icon">😊</span>
-          <span class="stat-name">きげん</span>
-          <div class="bar-bg"><div id="bar-mood" class="bar bar-pink"></div></div>
-          <span id="num-mood" class="stat-num">100</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-icon">✨</span>
-          <span class="stat-name">せいけつ</span>
-          <div class="bar-bg"><div id="bar-clean" class="bar bar-blue"></div></div>
-          <span id="num-clean" class="stat-num">100</span>
-        </div>
-      </div>
-
-      <!-- 状態アイコン行（病気・睡眠・うんち） -->
-      <div class="icon-row">
-        <span id="icon-sick"></span>
-        <span id="icon-sleep"></span>
-        <span id="icon-poop-count"></span>
-      </div>
-
-      <!-- 操作ボタン（6種類） -->
-      <div class="action-grid">
+      <!-- ★ 上部ボタン行：ごはん・おやつ・あそぶ・そうじ -->
+      <div class="btn-row top-row">
         <button class="btn-action" onclick="doAction('feed')">
           <span class="btn-emoji">🍙</span><span class="btn-label">ごはん</span>
         </button>
@@ -90,15 +45,73 @@
         <button class="btn-action" onclick="doAction('clean')">
           <span class="btn-emoji">🚿</span><span class="btn-label">そうじ</span>
         </button>
+      </div>
+
+      <!-- ★ LCDスクリーン（キャラ ↔ じょうたい を切り替え） -->
+      <div class="lcd-screen">
+
+        <!-- キャラビュー（デフォルト） -->
+        <div id="view-char" class="lcd-view">
+          <div id="char-area" class="char-area">
+            <canvas id="char-canvas" class="char-canvas char-normal"></canvas>
+            <div id="zzz-overlay" class="zzz-overlay" style="display:none"></div>
+            <div id="poop-display" class="poop-display"></div>
+          </div>
+        </div>
+
+        <!-- じょうたいビュー -->
+        <div id="view-status" class="lcd-view hidden">
+          <div class="sv-wrap">
+            <div class="sv-header">
+              <span id="sv-stage">たまご</span>
+              <span id="sv-age">0日0時間</span>
+            </div>
+            <div class="sv-bars">
+              <div class="sv-row">
+                <span class="sv-label">まんぷく</span>
+                <div class="sv-bar-bg"><div id="sv-bar-hunger" class="sv-bar bar-orange"></div></div>
+                <span id="sv-num-hunger" class="sv-num">100</span>
+              </div>
+              <div class="sv-row">
+                <span class="sv-label">きげん</span>
+                <div class="sv-bar-bg"><div id="sv-bar-mood" class="sv-bar bar-pink"></div></div>
+                <span id="sv-num-mood" class="sv-num">100</span>
+              </div>
+              <div class="sv-row">
+                <span class="sv-label">せいけつ</span>
+                <div class="sv-bar-bg"><div id="sv-bar-clean" class="sv-bar bar-blue"></div></div>
+                <span id="sv-num-clean" class="sv-num">100</span>
+              </div>
+            </div>
+            <div class="sv-icons">
+              <span id="sv-health"></span>
+              <span id="sv-sleep"></span>
+              <span id="sv-poop"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- メッセージ（LCD下部・常時表示） -->
+        <div class="message-box">
+          <p id="msg-text">ようこそ！</p>
+        </div>
+
+      </div><!-- /lcd-screen -->
+
+      <!-- ★ 下部ボタン行：なおす・ねる・じょうたい -->
+      <div class="btn-row bottom-row">
         <button class="btn-action" onclick="doAction('heal')">
           <span class="btn-emoji">💊</span><span class="btn-label">なおす</span>
         </button>
         <button class="btn-action" id="btn-sleep-wake" onclick="doAction('sleep')">
           <span class="btn-emoji">🌙</span><span class="btn-label">ねる</span>
         </button>
+        <button class="btn-action btn-status-toggle" id="btn-toggle-status" onclick="toggleStatusView()">
+          <span class="btn-emoji">📋</span><span class="btn-label">じょうたい</span>
+        </button>
       </div>
 
-    </div>
+    </div><!-- /game-frame -->
   </div>
 
   <!-- ========== 成長モーダル ========== -->
@@ -120,6 +133,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=2"></script>
+  <script src="script.js"></script>
 </body>
 </html>

@@ -292,6 +292,7 @@ function createDefaultState() {
 let state        = createDefaultState();
 let tickInterval = null;
 let gameRunning  = false; // visibilitychange で使用
+let isStatusView = false; // じょうたいビュー表示フラグ
 
 // ============================================================
 // ---- LocalStorage
@@ -626,9 +627,7 @@ function setSleepButtonText(sleepState) {
 
 function updateDisplay() {
   updateChar();
-  updateBars();
-  updateHeader();
-  updateIcons();
+  updateStatusView();
 }
 
 /** メインキャラクターを描画 */
@@ -646,39 +645,39 @@ function updateChar() {
   document.getElementById('poop-display').textContent = '💩'.repeat(state.poop);
 }
 
-function updateBars() {
-  setBar('bar-hunger', 'num-hunger', state.hunger);
-  setBar('bar-mood',   'num-mood',   state.mood);
-  setBar('bar-clean',  'num-clean',  state.cleanliness);
-}
-
-function setBar(barId, numId, value) {
-  const bar = document.getElementById(barId);
-  const num = document.getElementById(numId);
-  const v   = Math.max(0, Math.min(100, Math.round(value)));
-  bar.style.width = v + '%';
-  num.textContent = v;
-  bar.classList.remove('danger', 'warn');
-  if (v < 20)      bar.classList.add('danger');
-  else if (v < 40) bar.classList.add('warn');
-}
-
-function updateHeader() {
+/** じょうたいビューのステータスバー・テキストを更新 */
+function updateStatusView() {
   const stageNames = { egg: 'たまご', child: 'こども', young: 'せいちょうき', adult: 'おとな' };
-  document.getElementById('hdr-stage').textContent = stageNames[state.stage] || state.stage;
+  document.getElementById('sv-stage').textContent = stageNames[state.stage] || state.stage;
+
   const totalMin = Math.floor(state.ageMinutes);
   const days     = Math.floor(totalMin / (60 * 24));
   const hours    = Math.floor((totalMin % (60 * 24)) / 60);
-  document.getElementById('hdr-age').textContent = `${days}日${hours}時間`;
+  document.getElementById('sv-age').textContent = `${days}日${hours}時間`;
+
+  setSvBar('sv-bar-hunger', 'sv-num-hunger', state.hunger);
+  setSvBar('sv-bar-mood',   'sv-num-mood',   state.mood);
+  setSvBar('sv-bar-clean',  'sv-num-clean',  state.cleanliness);
+
+  document.getElementById('sv-health').textContent =
+    state.health === 'sick' ? '🤒 びょうき' : '';
+  document.getElementById('sv-sleep').textContent =
+    state.sleep === 'sleeping' ? '💤 おやすみ' : '';
+  document.getElementById('sv-poop').textContent =
+    state.poop > 0 ? `💩×${state.poop}` : '';
 }
 
-function updateIcons() {
-  document.getElementById('icon-sick').textContent =
-    state.health === 'sick' ? '🤒 びょうき' : '';
-  document.getElementById('icon-sleep').textContent =
-    state.sleep === 'sleeping' ? '💤 おやすみ' : '';
-  document.getElementById('icon-poop-count').textContent =
-    state.poop > 0 ? `💩×${state.poop}` : '';
+function setSvBar(barId, numId, value) {
+  const bar = document.getElementById(barId);
+  const num = document.getElementById(numId);
+  const v   = Math.max(0, Math.min(100, Math.round(value)));
+  if (bar) bar.style.width = v + '%';
+  if (num) num.textContent = v;
+  if (bar) {
+    bar.classList.remove('danger', 'warn');
+    if (v < 20)      bar.classList.add('danger');
+    else if (v < 40) bar.classList.add('warn');
+  }
 }
 
 // ============================================================
@@ -737,6 +736,29 @@ function showResult() {
 }
 
 // ============================================================
+// ---- じょうたいビュー切り替え
+// ============================================================
+
+function toggleStatusView() {
+  isStatusView = !isStatusView;
+
+  const viewChar   = document.getElementById('view-char');
+  const viewStatus = document.getElementById('view-status');
+  const btnToggle  = document.getElementById('btn-toggle-status');
+
+  if (isStatusView) {
+    viewChar.classList.add('hidden');
+    viewStatus.classList.remove('hidden');
+    if (btnToggle) btnToggle.classList.add('active-view');
+    updateStatusView();
+  } else {
+    viewStatus.classList.add('hidden');
+    viewChar.classList.remove('hidden');
+    if (btnToggle) btnToggle.classList.remove('active-view');
+  }
+}
+
+// ============================================================
 // ---- 画面切り替え
 // ============================================================
 
@@ -751,6 +773,13 @@ function showScreen(id) {
 
 function startMainGame() {
   showScreen('screen-main');
+  // じょうたいビューをキャラビューにリセット
+  isStatusView = false;
+  document.getElementById('view-char').classList.remove('hidden');
+  document.getElementById('view-status').classList.add('hidden');
+  const btnToggle = document.getElementById('btn-toggle-status');
+  if (btnToggle) btnToggle.classList.remove('active-view');
+
   setSleepButtonText(state.sleep);
   checkGrowth();
   updateDisplay();
