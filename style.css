@@ -197,7 +197,7 @@ body {
   background: var(--device-bg);
   /* たまご型：上が細くとがり・下が広く丸い */
   border-radius: 50% 50% 50% 50% / 72% 72% 28% 28%;
-  padding: 36px 14px 32px;
+  padding: 36px 20px 30px;
   box-shadow:
     0 8px 0 var(--device-shadow),
     0 14px 36px rgba(109, 40, 130, 0.5),
@@ -227,16 +227,16 @@ body {
   width: 100%;
 }
 
-/* 上部：3ボタン（ごはん・おやつ・あそぶ） */
+/* 上部：3ボタン（ごはん・おやつ・あそぶ）上は卵が狭いので大きく余白 */
 .btn-row.top-row {
-  gap: 5px;
-  padding: 0 22px; /* 上部は卵が狭いため余白多め */
+  gap: 4px;
+  padding: 0 38px;
 }
 
 /* 下部：4ボタン（なおす・ねる・そうじ・じょうたい） */
 .btn-row.bottom-row {
-  gap: 4px;
-  padding: 0 10px;
+  gap: 3px;
+  padding: 0 4px;
 }
 
 .btn-action {
@@ -247,14 +247,13 @@ body {
   justify-content: center;
   gap: 2px;
   flex: 1;
-  padding: 5px 1px;
+  padding: 4px 1px;
   background: #f8f0ff;
   border: none;
-  border-radius: 8px;
+  border-radius: 7px;
   cursor: pointer;
   transition: transform 0.08s, box-shadow 0.08s;
   -webkit-tap-highlight-color: transparent;
-  /* デフォルト影（紫） */
   box-shadow: 0 3px 0 #a21caf;
 }
 .btn-action:active {
@@ -262,7 +261,7 @@ body {
   box-shadow: 0 1px 0 #a21caf;
 }
 
-.btn-emoji { font-size: 18px; line-height: 1; }
+.btn-emoji { font-size: 16px; line-height: 1; }
 .btn-label { font-size: 5px; color: #374151; font-family: var(--font-pixel); white-space: nowrap; }
 
 /* 各ボタンの影カラー（上部3個） */
@@ -318,7 +317,7 @@ body {
 
 /* ---- キャラ表示エリア ---- */
 .char-area {
-  height: 140px;
+  height: 110px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -368,11 +367,11 @@ body {
    ============================================================ */
 .sv-wrap {
   width: 100%;
-  padding: 8px 10px;
+  padding: 6px 8px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  min-height: 140px;
+  gap: 4px;
+  min-height: 110px;
   justify-content: center;
 }
 
@@ -449,16 +448,16 @@ body {
    ============================================================ */
 .message-box {
   border-top: 1px solid #1a3a1a;
-  padding: 6px 10px;
-  min-height: 34px;
+  padding: 4px 8px;
+  min-height: 26px;
   display: flex;
   align-items: center;
   background: rgba(0,0,0,0.15);
 }
 #msg-text {
   color: var(--screen-text);
-  font-size: 7px;
-  line-height: 1.8;
+  font-size: 6px;
+  line-height: 1.6;
   word-break: break-all;
 }
 .msg-flash {
