@@ -737,6 +737,59 @@ body {
 }
 
 /* ============================================================
+   ミニゲームモーダル
+   ============================================================ */
+.minigame-box {
+  padding: 14px 14px 16px;
+  max-width: 260px;
+}
+.mg-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 9px;
+  color: #86efac;
+}
+.mg-title {
+  font-size: 8px;
+  color: #fbbf24;
+}
+#minigame-canvas {
+  display: block;
+  border: 2px solid #2a4a2a;
+  border-radius: 4px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  width: 215px;
+  height: 150px;
+}
+.mg-controls {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  gap: 12px;
+}
+.mg-btn {
+  flex: 1;
+  padding: 14px 0;
+  font-size: 20px;
+  background: #1a3a1a;
+  border: 2px solid #3a6a3a;
+  border-radius: 8px;
+  color: #86efac;
+  cursor: pointer;
+  font-family: inherit;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+.mg-btn:active {
+  background: #2a5a2a;
+  border-color: #50c030;
+}
+
+/* ============================================================
    レスポンシブ
    ============================================================ */
 @media (max-width: 360px) {

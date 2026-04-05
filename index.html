@@ -168,6 +168,26 @@
     </div>
   </div>
 
+  <!-- ========== ミニゲームモーダル ========== -->
+  <div id="modal-minigame" class="modal hidden">
+    <div class="modal-box minigame-box">
+      <div class="mg-header">
+        <span id="mg-score">⭐ 0</span>
+        <span class="mg-title">コイン集め！</span>
+        <span id="mg-time">⏱ 20</span>
+      </div>
+      <canvas id="minigame-canvas" width="215" height="150"></canvas>
+      <div class="mg-controls">
+        <button class="mg-btn"
+          ontouchstart="mgSetLeft(true);event.preventDefault()" ontouchend="mgSetLeft(false)"
+          onmousedown="mgSetLeft(true)" onmouseup="mgSetLeft(false)" onmouseleave="mgSetLeft(false)">◀</button>
+        <button class="mg-btn"
+          ontouchstart="mgSetRight(true);event.preventDefault()" ontouchend="mgSetRight(false)"
+          onmousedown="mgSetRight(true)" onmouseup="mgSetRight(false)" onmouseleave="mgSetRight(false)">▶</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ========== 記録モーダル ========== -->
   <div id="modal-result" class="modal hidden">
     <div class="modal-box">

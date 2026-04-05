@@ -1128,13 +1128,8 @@ function doAction(type) {
       break;
 
     case 'play':
-      if (state.hunger < 15) { showMessage('お腹が空いて遊べないよ〜ごはんが先！'); return; }
-      state.mood   = clamp(state.mood   + 20, 0, 100);
-      state.hunger = clamp(state.hunger -  5, 0, 100);
-      state.careCount++;
-      showMessage('🎮 わーい！たのしいね！');
-      triggerActionEffect('play');
-      break;
+      openMiniGame();
+      return; // ミニゲーム終了時にstate更新するのでここではreturn
 
     case 'clean':
       state.cleanliness = clamp(state.cleanliness + 40, 0, 100);
@@ -1547,6 +1542,223 @@ function init() {
 
   showScreen('screen-title');
 }
+
+// ============================================================
+// ---- ミニゲーム（コイン集め）
+// ============================================================
+
+const MG = {
+  canvas: null, ctx: null,
+  running: false, animId: null,
+  lastTime: 0,
+  score: 0, timeLeft: 20,
+  player: { x: 0, y: 0, w: 36, h: 42, speed: 130 },
+  coins: [], poops: [],
+  coinTimer: 0, poopTimer: 0,
+  leftPressed: false, rightPressed: false,
+  _keyDown: null, _keyUp: null,
+};
+
+function openMiniGame() {
+  if (state.stage === 'egg')          { showMessage('まだたまごだよ〜！'); return; }
+  if (state.sleep === 'sleeping')     { showMessage('おねむ中だよ。先に起こしてあげてね！'); return; }
+  if (state.hunger < 15)             { showMessage('お腹が空いて遊べないよ〜ごはんが先！'); return; }
+  showModal('modal-minigame');
+  startMiniGame();
+}
+
+function startMiniGame() {
+  const canvas = document.getElementById('minigame-canvas');
+  MG.canvas = canvas;
+  MG.ctx = canvas.getContext('2d');
+  MG.running = true;
+  MG.score = 0;
+  MG.timeLeft = 20;
+  MG.coins = [];
+  MG.poops = [];
+  MG.coinTimer = 0.5;
+  MG.poopTimer = 3;
+  MG.leftPressed = false;
+  MG.rightPressed = false;
+  MG.player.x = canvas.width / 2 - MG.player.w / 2;
+  MG.player.y = canvas.height - MG.player.h - 2;
+
+  MG._keyDown = (e) => {
+    if (e.key === 'ArrowLeft')  MG.leftPressed  = true;
+    if (e.key === 'ArrowRight') MG.rightPressed = true;
+  };
+  MG._keyUp = (e) => {
+    if (e.key === 'ArrowLeft')  MG.leftPressed  = false;
+    if (e.key === 'ArrowRight') MG.rightPressed = false;
+  };
+  document.addEventListener('keydown', MG._keyDown);
+  document.addEventListener('keyup',   MG._keyUp);
+
+  mgUpdateUI();
+  cancelAnimationFrame(MG.animId);
+  MG.lastTime = performance.now();
+  MG.animId = requestAnimationFrame(mgLoop);
+}
+
+function mgLoop(timestamp) {
+  if (!MG.running) return;
+  const dt = Math.min((timestamp - MG.lastTime) / 1000, 0.05);
+  MG.lastTime = timestamp;
+  mgUpdate(dt);
+  mgDraw();
+  MG.animId = requestAnimationFrame(mgLoop);
+}
+
+function mgUpdate(dt) {
+  const { canvas, player } = MG;
+
+  MG.timeLeft -= dt;
+  if (MG.timeLeft <= 0) { MG.timeLeft = 0; endMiniGame(); return; }
+
+  // プレイヤー移動
+  let vx = 0;
+  if (MG.leftPressed)  vx = -player.speed;
+  if (MG.rightPressed) vx =  player.speed;
+  player.x = Math.max(0, Math.min(canvas.width - player.w, player.x + vx * dt));
+
+  // 後半で落下速度アップ
+  const mult = 1 + (1 - MG.timeLeft / 20) * 0.7;
+
+  // コインスポーン
+  MG.coinTimer -= dt;
+  if (MG.coinTimer <= 0) {
+    MG.coinTimer = 0.6 + Math.random() * 0.9;
+    MG.coins.push({ x: 12 + Math.random() * (canvas.width - 24), y: -10, r: 8, speed: (55 + Math.random() * 35) * mult });
+  }
+
+  // うんちスポーン
+  MG.poopTimer -= dt;
+  if (MG.poopTimer <= 0) {
+    MG.poopTimer = 2.5 + Math.random() * 2;
+    MG.poops.push({ x: 12 + Math.random() * (canvas.width - 24), y: -16, speed: (40 + Math.random() * 30) * mult });
+  }
+
+  const px = player.x, py = player.y, pw = player.w, ph = player.h;
+
+  // コイン衝突判定
+  MG.coins = MG.coins.filter(c => {
+    c.y += c.speed * dt;
+    if (c.x + c.r > px && c.x - c.r < px + pw && c.y + c.r > py && c.y - c.r < py + ph) {
+      MG.score++;
+      mgUpdateUI();
+      return false;
+    }
+    return c.y < canvas.height + 20;
+  });
+
+  // うんち衝突判定
+  MG.poops = MG.poops.filter(p => {
+    p.y += p.speed * dt;
+    if (p.x + 10 > px && p.x - 10 < px + pw && p.y + 10 > py && p.y - 10 < py + ph) {
+      MG.score = Math.max(0, MG.score - 1);
+      mgUpdateUI();
+      return false;
+    }
+    return p.y < canvas.height + 20;
+  });
+
+  mgUpdateUI();
+}
+
+function mgDraw() {
+  const { canvas, ctx, player } = MG;
+  const W = canvas.width, H = canvas.height;
+
+  // 背景
+  ctx.fillStyle = '#1a2e1a';
+  ctx.fillRect(0, 0, W, H);
+
+  // グリッド
+  ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < W; x += 24) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+  for (let y = 0; y < H; y += 24) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+  // タイムバー
+  const ratio = MG.timeLeft / 20;
+  ctx.fillStyle = 'rgba(0,0,0,0.5)';
+  ctx.fillRect(0, 0, W, 5);
+  ctx.fillStyle = ratio > 0.4 ? '#50c030' : '#f07820';
+  ctx.fillRect(0, 0, W * ratio, 5);
+
+  // コイン
+  MG.coins.forEach(c => {
+    ctx.beginPath();
+    ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+    ctx.fillStyle = '#f8c030';
+    ctx.fill();
+    ctx.strokeStyle = '#b88820';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.fillStyle = '#7a5010';
+    ctx.font = 'bold 9px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('★', c.x, c.y);
+  });
+
+  // うんち
+  ctx.font = '16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  MG.poops.forEach(p => ctx.fillText('💩', p.x, p.y));
+
+  // プレイヤー（スプライト）
+  const sprName = getSpriteName();
+  const spr = SPRITES[sprName] || SPRITES['child'];
+  const ps = 3;
+  const sprW = spr[0].length * ps;
+  const sprH = spr.length * ps;
+  const drawX = Math.round(player.x + (player.w - sprW) / 2);
+  const drawY = Math.round(player.y + (player.h - sprH));
+  spr.forEach((row, ry) => {
+    for (let rx = 0; rx < row.length; rx++) {
+      const color = PALETTE[parseInt(row[rx], 16)];
+      if (!color) continue;
+      ctx.fillStyle = color;
+      ctx.fillRect(drawX + rx * ps, drawY + ry * ps, ps, ps);
+    }
+  });
+}
+
+function mgUpdateUI() {
+  const s = document.getElementById('mg-score');
+  const t = document.getElementById('mg-time');
+  if (s) s.textContent = `⭐ ${MG.score}`;
+  if (t) t.textContent = `⏱ ${Math.ceil(MG.timeLeft)}`;
+}
+
+function endMiniGame() {
+  MG.running = false;
+  cancelAnimationFrame(MG.animId);
+  document.removeEventListener('keydown', MG._keyDown);
+  document.removeEventListener('keyup',   MG._keyUp);
+
+  const score = MG.score;
+  let moodGain, msg;
+  if      (score >= 8) { moodGain = 30; msg = `🏆 すごい！${score}まいゲット！きげん大回復！`; }
+  else if (score >= 4) { moodGain = 20; msg = `🎉 ${score}まいゲット！きげんが回復したよ！`; }
+  else if (score >= 1) { moodGain = 10; msg = `😊 ${score}まいゲット！もっとがんばろう！`; }
+  else                 { moodGain = 5;  msg = `😅 コインが取れなかった…すこしきげん回復！`; }
+
+  state.mood   = clamp(state.mood   + moodGain, 0, 100);
+  state.hunger = clamp(state.hunger - 5, 0, 100);
+  state.careCount++;
+
+  closeModal('modal-minigame');
+  showMessage(msg);
+  updateDisplay();
+  saveGame();
+  triggerActionEffect('play');
+}
+
+function mgSetLeft(on)  { MG.leftPressed  = on; }
+function mgSetRight(on) { MG.rightPressed = on; }
 
 // ============================================================
 // ---- ユーティリティ
