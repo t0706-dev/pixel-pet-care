@@ -227,10 +227,13 @@ body {
   width: 100%;
 }
 
-/* 上部：3ボタン（ごはん・おやつ・あそぶ）上は卵が狭いので大きく余白 */
+/* 上部：3ボタン（ごはん・おやつ・あそぶ）下部ボタンと幅を揃える */
 .btn-row.top-row {
-  gap: 4px;
-  padding: 0 30px;
+  gap: 3px;
+  padding: 0 22px;
+}
+.top-row .btn-action {
+  max-width: 52px;
 }
 
 /* 下部：4ボタン（なおす・ねる・そうじ・じょうたい） */
@@ -295,7 +298,7 @@ body {
    LCDスクリーン（メイン表示エリア）
    ============================================================ */
 .lcd-screen {
-  width: 100%;
+  width: calc(4 * 52px + 3 * 3px);
   background: var(--screen-bg);
   border: 3px solid #0a1a0a;
   border-radius: 10px;
