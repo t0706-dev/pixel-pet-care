@@ -196,8 +196,8 @@ body {
   max-width: 360px;
   background: var(--device-bg);
   /* たまご型：上が細くとがり・下が広く丸い */
-  border-radius: 50% 50% 50% 50% / 72% 72% 28% 28%;
-  padding: 36px 20px 30px;
+  border-radius: 50% 50% 50% 50% / 58% 58% 42% 42%;
+  padding: 44px 18px 38px;
   box-shadow:
     0 8px 0 var(--device-shadow),
     0 14px 36px rgba(109, 40, 130, 0.5),
@@ -230,13 +230,13 @@ body {
 /* 上部：3ボタン（ごはん・おやつ・あそぶ）上は卵が狭いので大きく余白 */
 .btn-row.top-row {
   gap: 4px;
-  padding: 0 38px;
+  padding: 0 30px;
 }
 
 /* 下部：4ボタン（なおす・ねる・そうじ・じょうたい） */
 .btn-row.bottom-row {
   gap: 3px;
-  padding: 0 4px;
+  padding: 0 14px;
 }
 
 .btn-action {
