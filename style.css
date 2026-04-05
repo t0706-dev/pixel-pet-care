@@ -51,8 +51,8 @@ body {
 
 .title-logo {
   font-size: clamp(20px, 6vw, 28px);
-  color: #7c3aed;
-  text-shadow: 3px 3px 0 #4c1d95;
+  color: #111111;
+  text-shadow: 2px 2px 0 #888888;
   letter-spacing: 6px;
   margin-bottom: 8px;
 }
@@ -227,13 +227,13 @@ body {
   width: 100%;
 }
 
-/* 上部：3ボタン（ごはん・おやつ・あそぶ）下部ボタンと幅を揃える */
+/* 上部：4ボタン（ごはん・おやつ・あそぶ・あそびかた）*/
 .btn-row.top-row {
   gap: 3px;
-  padding: 0 22px;
+  padding: 0 16px;
 }
 .top-row .btn-action {
-  max-width: 52px;
+  max-width: 46px;
 }
 
 /* 下部：4ボタン（なおす・ねる・そうじ・じょうたい） */
@@ -664,6 +664,77 @@ body {
   gap: 8px;
 }
 .result-item span:last-child { text-align: right; color: #fbbf24; flex-shrink: 0; }
+
+/* ============================================================
+   あそびかたモーダル
+   ============================================================ */
+.help-modal-box {
+  background: var(--screen-bg);
+  border: 4px solid var(--screen-dim);
+  border-radius: 8px;
+  padding: 16px 14px 20px;
+  max-width: 340px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  animation: pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.help-section {
+  margin-bottom: 14px;
+}
+.help-section-title {
+  font-size: 8px;
+  color: #fbbf24;
+  border-bottom: 1px solid #2a4a2a;
+  padding-bottom: 4px;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+.help-row {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  margin-bottom: 5px;
+}
+.help-icon {
+  font-size: 13px;
+  flex-shrink: 0;
+  width: 18px;
+}
+.help-text {
+  font-size: 6px;
+  color: var(--screen-text);
+  line-height: 1.9;
+}
+.help-text strong {
+  color: #fbbf24;
+}
+.help-char-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 4px;
+}
+.help-char-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 4px;
+  padding: 4px 2px;
+}
+.help-char-card canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+.help-char-label {
+  font-size: 5px;
+  color: var(--screen-dim);
+  text-align: center;
+  line-height: 1.5;
+  white-space: pre-line;
+}
 
 /* ============================================================
    レスポンシブ

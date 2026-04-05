@@ -1314,8 +1314,56 @@ function showMessage(text) {
 // ---- モーダル
 // ============================================================
 
-function showModal(id)  { document.getElementById(id).classList.remove('hidden'); }
+function showModal(id) {
+  document.getElementById(id).classList.remove('hidden');
+  if (id === 'modal-help') renderHelpCharGrid();
+}
 function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+/** あそびかたモーダルのキャラ一覧を描画 */
+function renderHelpCharGrid() {
+  const grid = document.getElementById('help-char-grid');
+  if (!grid || grid.children.length > 0) return; // 既に描画済みならスキップ
+
+  const chars = [
+    { name: 'オリジナル\nふつう系', sprite: 'adult_normal' },
+    { name: 'ネコ\nげんき系',       sprite: 'cat_adult_genki' },
+    { name: 'スライム\nふつう系',   sprite: 'slime_adult_normal' },
+    { name: 'モンスター\nげんき系', sprite: 'monster_adult_genki' },
+    { name: 'うさぎ\nふつう系',    sprite: 'rabbit_adult_normal' },
+    { name: 'とり\nのんびり系',    sprite: 'bird_adult_lazy' },
+  ];
+
+  chars.forEach(({ name, sprite }) => {
+    const card = document.createElement('div');
+    card.className = 'help-char-card';
+
+    const canvas = document.createElement('canvas');
+    const ps = 3;
+    const rows = SPRITES[sprite];
+    if (rows) {
+      canvas.width  = rows[0].length * ps;
+      canvas.height = rows.length * ps;
+      const ctx = canvas.getContext('2d');
+      rows.forEach((row, y) => {
+        for (let x = 0; x < row.length; x++) {
+          const color = PALETTE[parseInt(row[x], 16)];
+          if (!color) continue;
+          ctx.fillStyle = color;
+          ctx.fillRect(x * ps, y * ps, ps, ps);
+        }
+      });
+    }
+
+    const label = document.createElement('div');
+    label.className = 'help-char-label';
+    label.textContent = name;
+
+    card.appendChild(canvas);
+    card.appendChild(label);
+    grid.appendChild(card);
+  });
+}
 
 // ============================================================
 // ---- 育成記録
