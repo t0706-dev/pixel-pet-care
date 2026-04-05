@@ -7,8 +7,8 @@
 /* ---- CSS 変数 ---- */
 :root {
   --font-pixel: 'Press Start 2P', 'Courier New', monospace;
-  --device-bg:     #d946ef;
-  --device-shadow: #701a75;
+  --device-bg:     #a8d8ea;
+  --device-shadow: #5b9db5;
   --screen-bg:     #1a2e1a;
   --screen-text:   #86efac;
   --screen-dim:    #4ade80;
