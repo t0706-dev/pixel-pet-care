@@ -236,7 +236,10 @@ body {
 /* 下部：4ボタン（なおす・ねる・そうじ・じょうたい） */
 .btn-row.bottom-row {
   gap: 3px;
-  padding: 0 14px;
+  padding: 0 22px;
+}
+.bottom-row .btn-action {
+  max-width: 52px;
 }
 
 .btn-action {
