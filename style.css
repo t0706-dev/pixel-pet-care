@@ -122,6 +122,66 @@ body {
 .btn-sub:hover { color: #ef4444; border-color: #ef4444; }
 
 /* ============================================================
+   ペット選択画面
+   ============================================================ */
+#screen-select {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 90vh;
+  justify-content: center;
+}
+.select-title {
+  font-size: 10px;
+  color: #7c3aed;
+  text-shadow: 2px 2px 0 #4c1d95;
+  letter-spacing: 4px;
+  margin-bottom: 6px;
+}
+.select-sub {
+  font-size: 7px;
+  color: #7c3aed;
+  opacity: 0.7;
+  margin-bottom: 20px;
+}
+.pet-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  width: 100%;
+  max-width: 340px;
+  padding: 0 12px;
+}
+.pet-btn {
+  font-family: var(--font-pixel);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 4px;
+  background: #f8f0ff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #7c3aed;
+  transition: transform 0.08s, box-shadow 0.08s;
+  -webkit-tap-highlight-color: transparent;
+}
+.pet-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #7c3aed;
+}
+.pet-btn canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+.pet-btn-label {
+  font-size: 6px;
+  color: #374151;
+  white-space: nowrap;
+}
+
+/* ============================================================
    メイン画面 - たまご型デバイスフレーム
    ============================================================ */
 #screen-main {
@@ -135,9 +195,9 @@ body {
   width: 88%;
   max-width: 360px;
   background: var(--device-bg);
-  /* たまご型：上部が狭く・下部が広い（本物の卵の向き） */
-  border-radius: 50% 50% 50% 50% / 38% 38% 62% 62%;
-  padding: 16px 12px 36px;
+  /* たまご型：上が細くとがり・下が広く丸い */
+  border-radius: 50% 50% 50% 50% / 72% 72% 28% 28%;
+  padding: 36px 14px 32px;
   box-shadow:
     0 8px 0 var(--device-shadow),
     0 14px 36px rgba(109, 40, 130, 0.5),
@@ -176,7 +236,7 @@ body {
 /* 下部：4ボタン（なおす・ねる・そうじ・じょうたい） */
 .btn-row.bottom-row {
   gap: 4px;
-  padding: 0 6px; /* 下部は広いので余白少なめ */
+  padding: 0 10px;
 }
 
 .btn-action {
